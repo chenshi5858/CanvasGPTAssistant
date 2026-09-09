@@ -1,0 +1,240 @@
+body {
+    font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI, Helvetica, Apple Color Emoji, Arial, sans-serif, Segoe UI Emoji, Segoe UI Symbol;
+    height: 100vh;
+    display : flex;
+    margin: auto;
+    background-color: #171717;
+    color: #f9f9f9;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1.5;
+}
+
+h1 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.chat_header {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.reset_button {
+    background-color: #343434;
+    color: #f9f9f9;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.reset_button:hover {
+    background-color: #4b4b4b;
+}
+
+.scroll_button {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.scroll_button:hover {
+    background-color: #0056b3;
+}
+
+.scroll_button i {
+    font-size: 20px;
+}
+
+.contenedor_externo_chatbox{
+    background-color:#212121;
+    display: flex;
+    width : 90%;
+    height : 100%;
+    border-radius: 20px;
+}
+
+.contenedor_interno_chatbox{
+    background-color:#212121;
+    display: flex;
+    width : 100%;
+    height : 100%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.mostrador_mensajes{
+    background-color:#212121;
+    display: flex;
+    flex-direction: column;
+    width : 100%;
+    height : 94%;
+    align-items: flex-start;
+    border-radius: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.mostrador_mensajes::-webkit-scrollbar {
+    width: 15px;
+}
+
+.mostrador_mensajes::-webkit-scrollbar-track {
+    background: #212121;
+    border-radius: 10px;
+}
+
+
+.mostrador_mensajes::-webkit-scrollbar-thumb {
+    background: #2f2f2f;
+    border-radius: 10px;
+    border: 2px solid #212121;
+}
+
+.mostrador_mensajes::-webkit-scrollbar-thumb:hover {
+    background: #676767;
+}
+
+.contenedor_mensaje{
+    height: 6%;
+    background-color: #2f2f2f;
+    width: 87%;
+    display: flex;
+    border-radius: 18px;
+    margin: 13px;
+    padding : 10px;
+    align-items: center;
+
+}
+
+.caja_mensaje{
+    height: 100%;
+    background-color: #2f2f2f;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 20px;
+}
+
+.texto_mensaje{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: #CCCCCC;
+    width: 100%;
+    height: 100%;
+}
+
+.input_mensaje {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #CCCCCC;
+    background-color: #2f2f2f;
+    resize: none;
+    font-size: 1rem;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    border: none;
+    outline: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-height: calc(1.5em * 5);
+    line-height: 1.5em;
+    overflow-y: auto;
+}
+
+.input_mensaje::-webkit-scrollbar {
+    display: none;
+}
+
+.boton_enviar{
+    color: #CCCCCC;
+}
+
+.boton_enviar {
+    cursor: pointer;
+    color: #f9f9f9;
+    font-size: 24px;
+}
+
+.boton_enviar:hover {
+    color: #00aaff;
+}
+
+.user {
+    background-color: #2f2f2f;
+    display: inline-block;
+    align-self: flex-start;
+    margin-left: auto;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 40px;
+    max-width: 70%;
+    word-wrap: break-word;
+    text-align: right;
+    color: #f9f9f9;
+    align-self: flex-end;
+}
+
+.gpt {
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.waiting_msg {
+    color: #b8c8d8;
+    opacity: 0.95;
+    font-style: italic;
+}
+
+.waiting_dots span {
+    display: inline-block;
+    width: 0.5em;
+    text-align: center;
+    opacity: 0.15;
+    animation: waiting-dot 1.2s infinite;
+}
+
+.waiting_dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.waiting_dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes waiting-dot {
+    0%,
+    80%,
+    100% {
+        opacity: 0.15;
+    }
+    40% {
+        opacity: 1;
+    }
+}

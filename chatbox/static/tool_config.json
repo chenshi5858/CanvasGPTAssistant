@@ -1,0 +1,37 @@
+{
+    "title": "Canvas ChatGPT Tool",
+    "scopes": [],
+    "extensions": [
+       {
+          "domain": "canvas-chatgpt-e3da13c4c013.herokuapp.com",
+          "tool_id": "canvas-chatgpt",
+          "platform": "canvas.instructure.com",
+          "settings": {
+             "text": "Canvas ChatGPT Tool",
+
+             "placements": [
+                {
+                   "text": "Canvas ChatGPT Dashboard",
+                   "enabled": true,
+
+                   "placement": "course_navigation",
+                   "message_type": "LtiResourceLinkRequest",
+                   "target_link_uri": "https://canvas-chatgpt-e3da13c4c013.herokuapp.com/"
+                }
+             ]
+          }
+       }
+    ],
+    "public_jwk": {
+       "kty": "RSA",
+       "alg": "RS256",
+       "e": "AQAB",
+       "kid": "8f796169-0ac4-48a3-a202-fa4f3d814fcd",
+       "n": "nZD7QWmIwj-3N_RZ1qJjX6CdibU87y2l02yMay4KunambalP9g0fU9yZLwLX9WYJINcXZDUf6QeZ-SSbblET-h8Q4OvfSQ7iuu0WqcvBGy8M0qoZ7I-NiChw8dyybMJHgpiP_AyxpCQnp3bQ6829kb3fopbb4cAkOilwVRBYPhRLboXma0cwcllJHPLvMp1oGa7Ad8osmmJhXhM9qdFFASg_OCQdPnYVzp8gOFeOGwlXfSFEgt5vgeU25E-ycUOREcnP7BnMUk7wpwYqlE537LWGOV5z_1Dqcqc9LmN-z4HmNV7b23QZW4_mzKIOY4IqjmnUGgLU9ycFj5YGDCts7Q",
+       "use": "sig"
+    },
+    "description": "Canvas ChatGPT Integration Tool",
+    "target_link_uri": "https://canvas-chatgpt-e3da13c4c013.herokuapp.com/",
+    "oidc_initiation_url": "https://canvas-chatgpt-e3da13c4c013.herokuapp.com/"
+ }
+ 

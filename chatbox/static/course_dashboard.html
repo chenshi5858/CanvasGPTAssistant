@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard del Curso: {{ course.title }}</title>
+</head>
+<body>
+    <h1>Dashboard del Curso: {{ course.title }}</h1>
+    
+    <h2>Detalles del Curso</h2>
+    <p><strong>ID:</strong> {{ course.canvas_id }}</p>
+    <p><strong>Fecha de Creación:</strong> {{ course.created }}</p>
+
+    <h2>Prompts asociados a este curso</h2>
+    <ul>
+        {% for prompt in prompts %}
+            <li>
+                <strong>Texto:</strong> {{ prompt.prompt_text }}<br>
+                <strong>Respuesta:</strong> {{ prompt.prompt_answer }}<br>
+                <strong>Usuario:</strong> {{ prompt.canvas_user.login }}<br>
+                <strong>Fecha de Creación:</strong> {{ prompt.created }}<br><br>
+            </li>
+        {% empty %}
+            <p>No hay prompts para este curso.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

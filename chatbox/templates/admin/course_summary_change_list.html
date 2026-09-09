@@ -1,0 +1,102 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<div style="display:flex; gap:20px; align-items:flex-start; margin-bottom:20px;">
+    <div style="flex:1;">
+        <h2>Actividad del curso (últimos 30 días)</h2>
+        <p><strong>Total prompts:</strong> {{ total_prompts_last_30_days }}</p>
+        <p><strong>Estudiantes distintos con actividad:</strong> {{ distinct_students_last_30_days }}</p>
+        <div style="background:#fff; border:1px solid #ddd; border-radius:8px; padding:12px;">
+            <canvas id="courseActivityChart" height="120"></canvas>
+        </div>
+    </div>
+
+    <div style="width:260px;">
+        <form method="get">
+            <label for="course"><strong>Curso:</strong></label>
+            <select name="course" id="course" onchange="this.form.submit()" style="width:100%; margin-top:6px;">
+                {% for course in courses %}
+                    <option value="{{ course.id }}" {% if selected_course == course.id|stringformat:"s" %}selected{% endif %}>
+                        {{ course.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <div style="margin-top:16px;">
+            <p><strong>Pendientes de análisis:</strong> {{ pending_interaction_analysis }}</p>
+            <form method="post" action="{{ analyze_interactions_url }}{% if selected_course %}?course={{ selected_course }}{% endif %}">
+                {% csrf_token %}
+                <button type="submit">Analizar prompts pendientes</button>
+            </form>
+            {% if can_reset_interactions %}
+                <form method="post" action="{{ reset_interactions_url }}{% if selected_course %}?course={{ selected_course }}{% endif %}" style="margin-top:10px;">
+                    {% csrf_token %}
+                    <button type="submit">Resetear análisis del curso</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{{ block.super }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = {{ chart_labels|safe }};
+const promptsPerDay = {{ chart_prompts_per_day|safe }};
+const studentsPerDay = {{ chart_students_per_day|safe }};
+
+const ctx = document.getElementById("courseActivityChart");
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        type: "bar",
+        label: "Prompts por día",
+        data: promptsPerDay,
+        yAxisID: "yPrompts",
+        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1
+      },
+      {
+        type: "line",
+        label: "Estudiantes distintos por día",
+        data: studentsPerDay,
+        yAxisID: "yStudents",
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.25)",
+        borderWidth: 2,
+        tension: 0.25,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: {
+      mode: "index",
+      intersect: false
+    },
+    scales: {
+      yPrompts: {
+        type: "linear",
+        position: "left",
+        beginAtZero: true,
+        title: { display: true, text: "Prompts" }
+      },
+      yStudents: {
+        type: "linear",
+        position: "right",
+        beginAtZero: true,
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: "Estudiantes distintos" }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}

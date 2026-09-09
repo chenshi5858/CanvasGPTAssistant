@@ -1,0 +1,48 @@
+.total_prompts_table,
+.total_prompts_table_last_week {
+    width: 48%; /* Ajusta el ancho */
+    display: inline-block; /* Para que estén en la misma fila */
+    margin: 1%; /* Espaciado entre tablas */
+    vertical-align: top; /* Alineación */
+}
+
+.total_prompts,
+.chart-container {
+    width: 48%;
+    display: inline-block;
+    margin: 1%;
+    vertical-align: top;
+}
+
+.course_selector {
+    width: 20%;
+    position: fixed; /* Fija la barra */
+    right: 0; /* Alinea a la derecha */
+    top: 10%; /* Separación desde arriba */
+    background-color: #f9f9f9; /* Fondo claro */
+    padding: 15px;
+    border: 1px solid #ddd; /* Borde alrededor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+table {
+    width: 100%;
+    border-collapse: collapse; /* Bordes unidos */
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f4f4f4; /* Fondo claro para encabezados */
+    font-weight: bold;
+}
+.chart-container {
+    width: 48%;
+    display: inline-block;
+    margin: 1%;
+    vertical-align: top;
+}

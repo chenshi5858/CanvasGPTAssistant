@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interacción Estudiante - {{ canvas_user.login }}</title>
+    <link rel="stylesheet" href="{% static 'chatgpt_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        .review_header {
+            width: 90%;
+            margin: 12px 0 8px 0;
+        }
+        .review_meta {
+            color: #cccccc;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .review_box {
+            width: 90%;
+            height: 100%;
+            background-color: #212121;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .review_messages {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .day_separator {
+            width: 100%;
+            margin: 18px 0 10px 0;
+            display: flex;
+            align-items: center;
+            color: #b8c8d8;
+            font-size: 0.85rem;
+            text-transform: capitalize;
+        }
+        .day_separator::before,
+        .day_separator::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        .day_separator span {
+            margin: 0 12px;
+            white-space: nowrap;
+        }
+        .empty_state {
+            color: #b8c8d8;
+            font-style: italic;
+            margin-top: 16px;
+        }
+        .analysis_row {
+            display: flex;
+            gap: 8px;
+            margin: 2px 0 8px 0;
+            flex-wrap: wrap;
+        }
+        .interaction_row {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 14px;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        .analysis_column {
+            background: #1b1b1b;
+            border: 1px solid #343434;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .analysis_title {
+            font-size: 0.75rem;
+            color: #b8c8d8;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .analysis_stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .messages_column .user {
+            margin-top: 0;
+        }
+        .analysis_badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #111;
+        }
+        .it-answer { background: #4c78a8; color: #fff; }
+        .it-clarification { background: #f2cf5b; color: #1c1c1c; }
+        .it-question { background: #59a14f; color: #fff; }
+        .it-out { background: #e15759; color: #fff; }
+        .it-na { background: #8a8a8a; color: #fff; }
+        .ac-correct { background: #59a14f; color: #fff; }
+        .ac-partial { background: #f2cf5b; color: #1c1c1c; }
+        .ac-incorrect { background: #e15759; color: #fff; }
+        .ac-na { background: #8a8a8a; color: #fff; }
+        @media (max-width: 980px) {
+            .interaction_row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="fondo">
+    <div class="review_header">
+        <h1>Revisión de interacción</h1>
+        <div class="review_meta"><strong>Estudiante:</strong> {{ canvas_user.login }}</div>
+        <div class="review_meta"><strong>Curso:</strong> {{ course.title }}</div>
+        {% if selected_agent %}
+            <div class="review_meta"><strong>Agente:</strong> {{ selected_agent.name }}</div>
+        {% endif %}
+        <div class="review_meta"><strong>Total prompts:</strong> {{ total_prompts }}</div>
+        <div class="review_meta">
+            <strong>Última interacción:</strong>
+            {% if last_interaction_at %}
+                {{ last_interaction_at|date:"d/m/Y H:i" }}
+            {% else %}
+                Sin interacciones
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="review_box">
+        <div class="review_messages" id="reviewMessages">
+            {% for p in prompts %}
+                {% ifchanged p.created|date:"Y-m-d" %}
+                    <div class="day_separator"><span>{{ p.created|date:"l d \\d\\e F \\d\\e Y" }}</span></div>
+                {% endifchanged %}
+                <div class="interaction_row">
+                    <div class="analysis_column">
+                        <div class="analysis_title">Clasificación</div>
+                        <div class="analysis_stack">
+                            {% if p.interaction_type == "answer" %}
+                                <span class="analysis_badge it-answer">interaction_type: answer</span>
+                            {% elif p.interaction_type == "clarification" %}
+                                <span class="analysis_badge it-clarification">interaction_type: clarification</span>
+                            {% elif p.interaction_type == "question" %}
+                                <span class="analysis_badge it-question">interaction_type: question</span>
+                            {% elif p.interaction_type == "out_of_context" %}
+                                <span class="analysis_badge it-out">interaction_type: out_of_context</span>
+                            {% else %}
+                                <span class="analysis_badge it-na">interaction_type: pending</span>
+                            {% endif %}
+
+                            {% if p.answer_correctness == "correct" %}
+                                <span class="analysis_badge ac-correct">answer_correctness: correct</span>
+                            {% elif p.answer_correctness == "partially_correct" %}
+                                <span class="analysis_badge ac-partial">answer_correctness: partially_correct</span>
+                            {% elif p.answer_correctness == "incorrect" %}
+                                <span class="analysis_badge ac-incorrect">answer_correctness: incorrect</span>
+                            {% elif p.answer_correctness == "not_applicable" %}
+                                <span class="analysis_badge ac-na">answer_correctness: not_applicable</span>
+                            {% else %}
+                                <span class="analysis_badge ac-na">answer_correctness: pending</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="messages_column">
+                        <div class="user">{{ p.prompt_text }}</div>
+                        <div class="gpt">{{ p.prompt_answer|safe }}</div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty_state">Este estudiante aún no tiene mensajes registrados en este curso.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("reviewMessages");
+            container.scrollTop = container.scrollHeight;
+            renderMathInElement(container, {
+                delimiters: [
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true },
+                ]
+            });
+        });
+    </script>
+</body>
+</html>
